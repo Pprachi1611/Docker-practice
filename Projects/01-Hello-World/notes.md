@@ -114,7 +114,6 @@ Example:
 
 - hello-world.png
 - docker-images.png
-- docker-ps.png
 - docker-ps-a.png
 
 ---
