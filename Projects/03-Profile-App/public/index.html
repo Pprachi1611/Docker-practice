@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Profile App</title>
+
+<style>
+body { font-family: Arial; margin: 40px; }
+
+input { padding: 8px; margin: 5px; }
+
+button { padding: 10px; margin-top: 10px; }
+
+#editProfile { display: none; }
+
+img {
+    width: 180px;
+    height: 180px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    display: block;
+}
+</style>
+</head>
+
+<body>
+
+<!-- PROFILE -->
+<div id="profile">
+    <h1>User Profile</h1>
+
+    <!-- ✅ IMAGE ADDED HERE -->
+    <img src="/img.jpg" alt="Profile Image">
+
+    <p>Name: <span id="name"></span></p>
+    <p>Email: <span id="email"></span></p>
+    <p>Interest: <span id="interest"></span></p>
+
+    <button onclick="editProfile()">Edit Profile</button>
+</div>
+
+<!-- EDIT -->
+<div id="editProfile">
+    <h1>Edit Profile</h1>
+
+    <!-- ✅ SAME IMAGE SHOWN IN EDIT TOO -->
+    <img src="/img.jpg" alt="Profile Image">
+
+    <input id="inputName" placeholder="Name"><br>
+    <input id="inputEmail" placeholder="Email"><br>
+    <input id="inputInterest" placeholder="Interest"><br>
+
+    <button onclick="saveProfile()">Save Profile</button>
+</div>
+
+<script>
+
+// ================= LOAD DATA =================
+window.onload = function () {
+    fetch('/get-profile')
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById("name").innerText = data.name || "";
+            document.getElementById("email").innerText = data.email || "";
+            document.getElementById("interest").innerText = data.interest || "";
+        });
+};
+
+// ================= EDIT =================
+function editProfile() {
+    document.getElementById("profile").style.display = "none";
+    document.getElementById("editProfile").style.display = "block";
+
+    document.getElementById("inputName").value =
+        document.getElementById("name").innerText;
+
+    document.getElementById("inputEmail").value =
+        document.getElementById("email").innerText;
+
+    document.getElementById("inputInterest").value =
+        document.getElementById("interest").innerText;
+}
+
+// ================= SAVE =================
+function saveProfile() {
+
+    const userObj = {
+        name: document.getElementById("inputName").value,
+        email: document.getElementById("inputEmail").value,
+        interest: document.getElementById("inputInterest").value
+    };
+
+    fetch('/update-profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userObj)
+    })
+    .then(res => res.json())
+    .then(() => {
+        return fetch('/get-profile');
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        document.getElementById("name").innerText = data.name;
+        document.getElementById("email").innerText = data.email;
+        document.getElementById("interest").innerText = data.interest;
+
+        document.getElementById("profile").style.display = "block";
+        document.getElementById("editProfile").style.display = "none";
+    });
+}
+
+</script>
+
+</body>
+</html>
