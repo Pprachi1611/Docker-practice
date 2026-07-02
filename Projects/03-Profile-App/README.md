@@ -1,78 +1,63 @@
-# 🚀 Profile App using Docker, Node.js & MongoDB
+# 🚀 Profile App - Dockerized CRUD User Management System
 
-## 📌 Overview
+A complete full-stack CRUD User Management System built using Node.js, Express.js, MongoDB, Docker, and Mongo Express.
 
-This project is a full-stack profile management application built using Node.js, Express.js, MongoDB, and Docker.
-
-The application allows users to view and edit their profile information. Any updates made to the profile are stored in MongoDB, ensuring the data remains available even after refreshing the page or restarting the application.
-
-All services run inside Docker containers and communicate through a custom Docker network.
+The application allows users to create, view, update, search, and delete user profiles through a modern web interface. All user data is stored permanently in MongoDB, ensuring persistence across page refreshes and container restarts.
 
 ---
 
-## 🎯 Project Objectives
+# Project Overview
 
-- Build a Node.js backend
-- Connect Node.js with MongoDB
-- Manage MongoDB using Mongo Express
-- Learn Docker Networking
-- Persist application data
-- Containerize the complete application
+This project demonstrates how a complete web application can be containerized using Docker and connected to a MongoDB database. The backend exposes REST APIs that interact with MongoDB using the official MongoDB Node.js Driver, while the frontend communicates with these APIs using the Fetch API.
+
+Mongo Express is included to provide a graphical interface for managing and inspecting the MongoDB database.
 
 ---
 
-## 🏗️ Architecture
+# Features
 
-```
-                Browser
-                    │
-                    ▼
-           Node.js + Express
-                    │
-                    ▼
-           Docker Network
-         (profile-network)
-           │           │
-           ▼           ▼
-      MongoDB     Mongo Express
-```
-
----
-
-## ✨ Features
-
-- View Profile
-- Edit Profile
-- Save Profile Information
-- Store Data in MongoDB
-- Retrieve Data from Database
-- Persistent Data After Refresh
-- Mongo Express Dashboard
+- Create User
+- View Users
+- Update User
+- Delete User
+- Search Users
+- Responsive UI
+- Client-side Validation
+- Server-side Validation
+- REST API
+- MongoDB Data Persistence
+- Dockerized Application
+- Mongo Express Integration
+- Docker Compose Setup
 
 ---
 
-## 🛠️ Technologies Used
+# Technologies Used
 
-- HTML
-- CSS
+- HTML5
+- CSS3
 - JavaScript
 - Node.js
 - Express.js
 - MongoDB
-- Mongo Express
+- MongoDB Node.js Driver
 - Docker
-- Docker Networking
+- Docker Compose
+- Mongo Express
 
 ---
 
-## 📂 Folder Structure
+# Folder Structure
 
 ```
+
 03-Profile-App
 │
 ├── public
-│   ├── index.html
-│   └── img.jpg
+│ ├── index.html
+│ ├── style.css
+│ ├── script.js
+│ └── img.jpg
 │
 ├── screenshots
 │
@@ -85,58 +70,125 @@ All services run inside Docker containers and communicate through a custom Docke
 ├── README.md
 ├── commands.md
 └── notes.md
+
 ```
 
 ---
 
-## 🚀 Application Workflow
+# Application Workflow
 
-1. User opens the Profile App.
-2. Profile information is loaded from MongoDB.
-3. User edits the profile.
-4. Node.js receives the request.
-5. Data is updated in MongoDB.
-6. On page refresh, the updated information is loaded from the database.
+Browser
+
+↓
+
+Frontend (HTML, CSS, JavaScript)
+
+↓
+
+Express.js Server
+
+↓
+
+REST APIs
+
+↓
+
+MongoDB
+
+↓
+
+Mongo Express
 
 ---
 
-## 📸 Screenshots
+# Docker Services
 
-Store screenshots inside the `screenshots` folder.
+## Profile App
 
-- Home Page
-- Edit Profile
-- Updated Profile
+Runs the Node.js application.
+
+## MongoDB
+
+Stores all user information.
+
+## Mongo Express
+
+Provides a web interface to manage MongoDB.
+
+---
+
+# Getting Started
+
+Install dependencies
+
+```bash
+npm install
+```
+
+Build and start all containers
+
+```bash
+docker compose up -d --build
+```
+
+Open the application
+
+```
+http://localhost:3000
+```
+
+Open Mongo Express
+
+```
+http://localhost:8081
+```
+
+---
+
+# Screenshots
+
+Add screenshots inside the screenshots folder.
+
+Suggested screenshots
+
+- Dashboard
+- Add User
+- Edit User
+- Search User
+- Mongo Express
 - Docker Containers
-- Mongo Express Dashboard
-- MongoDB Collection
+- Docker Images
+- Docker Network
+- API Testing
 
 ---
 
-## 📚 Skills Learned
+# Learning Outcomes
 
+- CRUD Operations
+- Express.js REST APIs
+- MongoDB Integration
+- Docker Images
 - Docker Containers
 - Docker Networking
-- Port Mapping
-- MongoDB Integration
-- REST APIs
-- Node.js Backend
-- Persistent Storage
-- Full Stack Docker Deployment
+- Docker Compose
+- Environment Variables
+- Fetch API
+- Client-Server Architecture
 
 ---
 
-## 🚀 Future Improvements
+# Future Improvements
 
-- User Authentication
-- Multiple User Profiles
-- Profile Picture Upload
-- Form Validation
-- Docker Compose Deployment
+- Authentication
+- JWT Authorization
+- Profile Images
+- Password Encryption
 - Kubernetes Deployment
+- CI/CD Pipeline
 
 ---
 
-## ✅ Status
+# Author
 
-Completed
+Prachi Patil
