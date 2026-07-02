@@ -1,18 +1,32 @@
-version: "3"
-
 services:
+  profile-app:
+    build:
+      context: .
+    container_name: profile-app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+    environment:
+      MONGO_USERNAME: ${MONGO_USERNAME}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
+
   mongo:
     image: mongo
+    container_name: mongo
     ports:
       - "27017:27017"
     environment:
-     MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
-     MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
 
   mongo-express:
     image: mongo-express
+    container_name: mongo-express
     ports:
       - "8081:8081"
+    depends_on:
+      - mongo
     environment:
       ME_CONFIG_MONGODB_SERVER: mongo
       ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_USERNAME}

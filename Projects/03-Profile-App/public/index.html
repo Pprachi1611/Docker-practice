@@ -1,117 +1,213 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Profile App</title>
-
-<style>
-body { font-family: Arial; margin: 40px; }
-
-input { padding: 8px; margin: 5px; }
-
-button { padding: 10px; margin-top: 10px; }
-
-#editProfile { display: none; }
-
-img {
-    width: 180px;
-    height: 180px;
-    border-radius: 10px;
-    margin-bottom: 15px;
-    display: block;
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Management System</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
 
-<!-- PROFILE -->
-<div id="profile">
-    <h1>User Profile</h1>
+  <!-- ===================== NAVBAR ===================== -->
+  <header class="navbar">
+    <div class="navbar-left">
+      <div class="logo">👤</div>
+      <h1 class="navbar-title">User Management System</h1>
+    </div>
+    <div class="navbar-right">
+      <button class="btn btn-primary" id="addUserBtn">
+        <span class="icon">+</span> Add User
+      </button>
+      <button class="btn btn-secondary" id="refreshBtn">
+        <span class="icon">⟳</span> Refresh
+      </button>
+    </div>
+  </header>
 
-    <!-- ✅ IMAGE ADDED HERE -->
-    <img src="/img.jpg" alt="Profile Image">
+  <!-- ===================== MAIN CONTENT ===================== -->
+  <main class="container">
 
-    <p>Name: <span id="name"></span></p>
-    <p>Email: <span id="email"></span></p>
-    <p>Interest: <span id="interest"></span></p>
+    <!-- Stats Cards -->
+    <section class="stats-row">
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-blue">👥</div>
+        <div>
+          <p class="stat-label">Total Users</p>
+          <h2 class="stat-value" id="totalUsersCount">0</h2>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-green">📄</div>
+        <div>
+          <p class="stat-label">Current Page</p>
+          <h2 class="stat-value" id="currentPageDisplay">1</h2>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-orange">🔍</div>
+        <div>
+          <p class="stat-label">Filtered Results</p>
+          <h2 class="stat-value" id="filteredCount">0</h2>
+        </div>
+      </div>
+    </section>
 
-    <button onclick="editProfile()">Edit Profile</button>
-</div>
+    <!-- Toolbar -->
+    <section class="card toolbar-card">
+      <div class="search-wrapper">
+        <span class="search-icon">🔍</span>
+        <input
+          type="text"
+          id="searchInput"
+          class="search-input"
+          placeholder="Search by name, email, city, interest or occupation..."
+        />
+      </div>
+    </section>
 
-<!-- EDIT -->
-<div id="editProfile">
-    <h1>Edit Profile</h1>
+    <!-- Table Card -->
+    <section class="card table-card">
+      <div class="table-wrapper">
+        <table id="usersTable">
+          <thead>
+            <tr>
+              <th data-sort="_id">ID <span class="sort-arrow"></span></th>
+              <th data-sort="name">Name <span class="sort-arrow"></span></th>
+              <th data-sort="email">Email <span class="sort-arrow"></span></th>
+              <th data-sort="phone">Phone <span class="sort-arrow"></span></th>
+              <th data-sort="age">Age <span class="sort-arrow"></span></th>
+              <th data-sort="city">City <span class="sort-arrow"></span></th>
+              <th data-sort="interest">Interest <span class="sort-arrow"></span></th>
+              <th data-sort="occupation">Occupation <span class="sort-arrow"></span></th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="usersTableBody">
+            <!-- Rows injected by JS -->
+          </tbody>
+        </table>
 
-    <!-- ✅ SAME IMAGE SHOWN IN EDIT TOO -->
-    <img src="/img.jpg" alt="Profile Image">
+        <!-- Loading Spinner -->
+        <div id="loadingSpinner" class="loading-spinner-wrapper hidden">
+          <div class="spinner"></div>
+          <p>Loading users...</p>
+        </div>
 
-    <input id="inputName" placeholder="Name"><br>
-    <input id="inputEmail" placeholder="Email"><br>
-    <input id="inputInterest" placeholder="Interest"><br>
+        <!-- Empty State -->
+        <div id="emptyState" class="empty-state hidden">
+          <div class="empty-illustration">📭</div>
+          <h3>No Users Found</h3>
+          <p>Try adjusting your search or add a new user to get started.</p>
+        </div>
+      </div>
 
-    <button onclick="saveProfile()">Save Profile</button>
-</div>
+      <!-- Pagination -->
+      <div class="pagination-wrapper">
+        <button class="btn btn-outline" id="prevPageBtn">&larr; Prev</button>
+        <div id="paginationNumbers" class="pagination-numbers"></div>
+        <button class="btn btn-outline" id="nextPageBtn">Next &rarr;</button>
+      </div>
+    </section>
+  </main>
 
-<script>
+  <!-- ===================== ADD / EDIT USER MODAL ===================== -->
+  <div class="modal-overlay hidden" id="userModalOverlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="modalTitle">Add User</h2>
+        <button class="modal-close" id="closeModalBtn">&times;</button>
+      </div>
 
-// ================= LOAD DATA =================
-window.onload = function () {
-    fetch('/get-profile')
-        .then(res => res.json())
-        .then(data => {
-            document.getElementById("name").innerText = data.name || "";
-            document.getElementById("email").innerText = data.email || "";
-            document.getElementById("interest").innerText = data.interest || "";
-        });
-};
+      <form id="userForm" class="modal-body">
+        <input type="hidden" id="userId" />
 
-// ================= EDIT =================
-function editProfile() {
-    document.getElementById("profile").style.display = "none";
-    document.getElementById("editProfile").style.display = "block";
+        <div class="form-group">
+          <label for="name">Name <span class="required">*</span></label>
+          <input type="text" id="name" placeholder="e.g. Jane Doe" />
+          <span class="error-text" id="nameError"></span>
+        </div>
 
-    document.getElementById("inputName").value =
-        document.getElementById("name").innerText;
+        <div class="form-group">
+          <label for="email">Email <span class="required">*</span></label>
+          <input type="email" id="email" placeholder="e.g. jane@example.com" />
+          <span class="error-text" id="emailError"></span>
+        </div>
 
-    document.getElementById("inputEmail").value =
-        document.getElementById("email").innerText;
+        <div class="form-group">
+          <label for="phone">Phone <span class="required">*</span></label>
+          <input type="text" id="phone" placeholder="e.g. +1 555 123 4567" />
+          <span class="error-text" id="phoneError"></span>
+        </div>
 
-    document.getElementById("inputInterest").value =
-        document.getElementById("interest").innerText;
-}
+        <div class="form-row">
+          <div class="form-group">
+            <label for="age">Age</label>
+            <input type="number" id="age" placeholder="e.g. 28" min="0" />
+            <span class="error-text" id="ageError"></span>
+          </div>
 
-// ================= SAVE =================
-function saveProfile() {
+          <div class="form-group">
+            <label for="city">City</label>
+            <input type="text" id="city" placeholder="e.g. New York" />
+          </div>
+        </div>
 
-    const userObj = {
-        name: document.getElementById("inputName").value,
-        email: document.getElementById("inputEmail").value,
-        interest: document.getElementById("inputInterest").value
-    };
+        <div class="form-row">
+          <div class="form-group">
+            <label for="interest">Interest</label>
+            <input type="text" id="interest" placeholder="e.g. Photography" />
+          </div>
 
-    fetch('/update-profile', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(userObj)
-    })
-    .then(res => res.json())
-    .then(() => {
-        return fetch('/get-profile');
-    })
-    .then(res => res.json())
-    .then(data => {
+          <div class="form-group">
+            <label for="occupation">Occupation</label>
+            <input type="text" id="occupation" placeholder="e.g. Engineer" />
+          </div>
+        </div>
+      </form>
 
-        document.getElementById("name").innerText = data.name;
-        document.getElementById("email").innerText = data.email;
-        document.getElementById("interest").innerText = data.interest;
+      <div class="modal-footer">
+        <button class="btn btn-outline" id="cancelModalBtn">Cancel</button>
+        <button class="btn btn-primary" id="saveUserBtn">Save</button>
+      </div>
+    </div>
+  </div>
 
-        document.getElementById("profile").style.display = "block";
-        document.getElementById("editProfile").style.display = "none";
-    });
-}
+  <!-- ===================== VIEW USER MODAL ===================== -->
+  <div class="modal-overlay hidden" id="viewModalOverlay">
+    <div class="modal modal-small">
+      <div class="modal-header">
+        <h2>User Details</h2>
+        <button class="modal-close" id="closeViewModalBtn">&times;</button>
+      </div>
+      <div class="modal-body" id="viewModalBody">
+        <!-- Injected by JS -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" id="closeViewBtn">Close</button>
+      </div>
+    </div>
+  </div>
 
-</script>
+  <!-- ===================== DELETE CONFIRMATION MODAL ===================== -->
+  <div class="modal-overlay hidden" id="deleteModalOverlay">
+    <div class="modal modal-small">
+      <div class="modal-header">
+        <h2>Confirm Deletion</h2>
+        <button class="modal-close" id="closeDeleteModalBtn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete <strong id="deleteUserName"></strong>? This action cannot be undone.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" id="cancelDeleteBtn">Cancel</button>
+        <button class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+      </div>
+    </div>
+  </div>
 
+  <!-- ===================== TOAST CONTAINER ===================== -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <script src="script.js"></script>
 </body>
 </html>
