@@ -1,7 +1,7 @@
 services:
   profile-app:
-    build:
-      context: .
+    #image: profile-app:2.0
+    image: 327091918219.dkr.ecr.ap-south-1.amazonaws.com/profile-app:2.0
     container_name: profile-app
     ports:
       - "3000:3000"
@@ -19,6 +19,8 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    volumes:
+      - mongo-data:/data/db
 
   mongo-express:
     image: mongo-express
@@ -32,3 +34,6 @@ services:
       ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_USERNAME}
       ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_PASSWORD}
       ME_CONFIG_MONGODB_ENABLE_ADMIN: "true"
+volumes:
+  mongo-data:
+    driver: local

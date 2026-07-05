@@ -1,0 +1,25 @@
+# Dependencies
+node_modules
+npm-debug.log
+
+# Git
+.git
+.gitignore
+
+# Documentation
+README.md
+notes.md
+commands.md
+
+# Screenshots
+screenshots
+
+
+
+# Editor files
+.vscode
+.idea
+
+# OS files
+.DS_Store
+Thumbs.db

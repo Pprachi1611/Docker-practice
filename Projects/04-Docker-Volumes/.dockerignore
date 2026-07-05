@@ -1,0 +1,26 @@
+# Dependencies
+node_modules
+npm-debug.log
+
+# Environment variables
+.env
+
+# Git
+.git
+.gitignore
+
+# Documentation
+README.md
+notes.md
+commands.md
+
+# Screenshots
+screenshots
+
+# IDE files
+.vscode
+.idea
+
+# Operating System files
+.DS_Store
+Thumbs.db
