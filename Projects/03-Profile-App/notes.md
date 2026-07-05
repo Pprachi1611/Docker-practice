@@ -173,4 +173,4 @@ Refreshing the browser does not remove data because the frontend loads informati
 - Express Routing
 - Async/Await
 - Fetch API
-- Full Stack Application Development
+- Full stack development
