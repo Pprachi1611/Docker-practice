@@ -1,0 +1,12 @@
+services:
+  notes-app:
+    image: notes-app:latest
+    container_name: notes-app
+    ports:
+      - "3000:3000"
+    volumes:
+      - notes-data:/home/app/data
+    restart: unless-stopped
+
+volumes:
+  notes-data:
