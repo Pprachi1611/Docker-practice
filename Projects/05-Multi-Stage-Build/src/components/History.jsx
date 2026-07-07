@@ -1,17 +1,27 @@
 import "./History.css";
 
-function History(){
+function History({ history }) {
+  return (
+    <div className="history">
 
-    return(
+      <div className="history-header">
+        <h3>History</h3>
+      </div>
 
-        <div className="history">
+      {history.length===0 ? (
 
-            No History
+        <p>No Calculations</p>
 
-        </div>
+      ) : (
 
-    )
+        history.map((item,index)=>(
+            <p key={index}>{item}</p>
+        ))
 
+      )}
+
+    </div>
+  );
 }
 
 export default History;

@@ -1,31 +1,57 @@
 .btn{
 
-    height:70px;
+height:70px;
 
-    border:none;
+border:none;
 
-    border-radius:12px;
+border-radius:15px;
 
-    background:#3b3b3b;
+background:#3c3c3c;
 
-    color:white;
+color:white;
 
-    font-size:22px;
+font-size:22px;
 
-    cursor:pointer;
+cursor:pointer;
 
-    transition:.2s;
+transition:.2s;
+
+font-weight:bold;
 
 }
 
 .btn:hover{
 
-    background:#5c5c5c;
+transform:translateY(-2px);
 
 }
 
 .btn:active{
 
-    transform:scale(.95);
+transform:scale(.95);
+
+}
+
+.operator{
+
+background:#ff9500;
+
+}
+
+.operator:hover{
+
+background:#ffac33;
+
+}
+
+.special{
+
+background:#5f5f5f;
+
+}
+
+.zero{
+
+grid-column:span 2;
 
 }

@@ -1,25 +1,20 @@
-.display{
+.display-container {
+  background: #2b2b2b;
+  border-radius: 15px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
 
-    background:#2e2e2e;
+.operation {
+  color: #8f8f8f;
+  font-size: 18px;
+  min-height: 25px;
+  text-align: right;
+}
 
-    color:white;
-
-    height:80px;
-
-    border-radius:12px;
-
-    display:flex;
-
-    justify-content:flex-end;
-
-    align-items:center;
-
-    padding:20px;
-
-    font-size:42px;
-
-    margin-bottom:20px;
-
-    overflow:hidden;
-
+.display {
+  color: white;
+  font-size: 42px;
+  text-align: right;
+  word-break: break-all;
 }

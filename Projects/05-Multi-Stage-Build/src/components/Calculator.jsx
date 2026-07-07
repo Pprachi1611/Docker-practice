@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Display from "./Display";
 import ButtonGrid from "./ButtonGrid";
+import History from "./History";
 import "./Calculator.css";
 import { calculate } from "../utils/calculator";
 
@@ -8,24 +9,42 @@ function Calculator() {
   const [display, setDisplay] = useState("0");
   const [firstValue, setFirstValue] = useState(null);
   const [operator, setOperator] = useState(null);
+  const [history, setHistory] = useState([]);
+  const [resetDisplay, setResetDisplay] = useState(false);
 
   function handleButton(value) {
-
     // Numbers
     if (!isNaN(value)) {
-      if (display === "0")
-        setDisplay(value);
-      else
-        setDisplay(display + value);
 
-      return;
+    if (resetDisplay) {
+        setDisplay(value);
+        setResetDisplay(false);
+        return;
+    }
+
+    if (display === "0") {
+        setDisplay(value);
+    } else {
+        setDisplay(display + value);
+    }
+
+    return;
     }
 
     // Decimal
     if (value === ".") {
-      if (!display.includes("."))
+
+    if (resetDisplay) {
+        setDisplay("0.");
+        setResetDisplay(false);
+        return;
+    }
+
+    if (!display.includes(".")) {
         setDisplay(display + ".");
-      return;
+    }
+
+    return;
     }
 
     // Clear
@@ -33,24 +52,29 @@ function Calculator() {
       setDisplay("0");
       setFirstValue(null);
       setOperator(null);
+      setHistory([]);
       return;
     }
 
     // Delete
     if (value === "⌫") {
-      if (display.length === 1)
+      if (display.length === 1 || display === "Error") {
         setDisplay("0");
-      else
+      } else {
         setDisplay(display.slice(0, -1));
+      }
       return;
     }
 
     // Positive / Negative
     if (value === "±") {
-      if (display.startsWith("-"))
+      if (display === "0") return;
+
+      if (display.startsWith("-")) {
         setDisplay(display.substring(1));
-      else
+      } else {
         setDisplay("-" + display);
+      }
       return;
     }
 
@@ -60,35 +84,112 @@ function Calculator() {
       return;
     }
 
+      
     // Operators
     if (["+", "-", "×", "÷"].includes(value)) {
-      setFirstValue(display);
-      setOperator(value);
-      setDisplay("0");
-      return;
+
+    if (firstValue !== null && display === "0" && !resetDisplay) {
+        setOperator(value);
+        return;
     }
 
+    if (firstValue !== null && operator && !resetDisplay) {
+
+        const result = calculate(firstValue, display, operator);
+
+        setFirstValue(result);
+        setDisplay("0");
+        setOperator(value);
+        setResetDisplay(false);
+
+    } else {
+
+        setFirstValue(display);
+        setDisplay("0");
+        setOperator(value);
+        setResetDisplay(false);
+
+    }
+
+    return;
+    }
     // Equals
     if (value === "=") {
       if (firstValue && operator) {
         const result = calculate(firstValue, display, operator);
 
+        setHistory((prevHistory) => [
+          `${firstValue} ${operator} ${display} = ${result}`,
+          ...prevHistory,
+        ]);
+
         setDisplay(result);
         setFirstValue(null);
         setOperator(null);
+        setResetDisplay(true);
       }
+      return;
     }
   }
 
+  // Keyboard Support
+  useEffect(() => {
+    const handleKey = (event) => {
+      let key = event.key;
+
+      if (key === "*") key = "×";
+      if (key === "/") key = "÷";
+      if (key === "Enter") key = "=";
+      if (key === "Escape") key = "AC";
+      if (key === "Backspace") key = "⌫";
+
+      const validKeys = [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "+",
+        "-",
+        "×",
+        "÷",
+        "=",
+        ".",
+        "%",
+        "⌫",
+        "AC",
+      ];
+
+      if (validKeys.includes(key)) {
+        handleButton(key);
+      }
+    };
+
+    window.addEventListener("keydown", handleKey);
+
+    return () => {
+      window.removeEventListener("keydown", handleKey);
+    };
+  });
+
   return (
     <div className="calculator">
-
       <h2 className="title">React Calculator</h2>
 
-      <Display value={display} />
+      <Display
+       value={display}
+       operator={operator}
+       firstValue={firstValue}
+      />
 
       <ButtonGrid onButtonClick={handleButton} />
 
+      <History history={history} />
     </div>
   );
 }
