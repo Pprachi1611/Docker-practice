@@ -1,0 +1,31 @@
+.btn{
+
+    height:70px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#3b3b3b;
+
+    color:white;
+
+    font-size:22px;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+}
+
+.btn:hover{
+
+    background:#5c5c5c;
+
+}
+
+.btn:active{
+
+    transform:scale(.95);
+
+}
