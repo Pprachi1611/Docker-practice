@@ -11,7 +11,7 @@ function Calculator() {
   const [operator, setOperator] = useState(null);
   const [history, setHistory] = useState([]);
   const [resetDisplay, setResetDisplay] = useState(false);
-  const [darkMode, setDarkMode] = useState(true);
+
 
   function handleButton(value) {
     // Numbers
@@ -179,13 +179,8 @@ function Calculator() {
   });
 
   return (
-    <div className={darkMode ? "calculator dark" : "calculator light"}>
-      <h2 className="title">React Calculator</h2>
-      <div className="theme-toggle">
-        <button onClick={() => setDarkMode(!darkMode)}>
-            {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
-        </button>
-      </div>
+    <div className="calculator">
+   
 
       <Display
        value={display}
