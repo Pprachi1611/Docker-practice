@@ -1,48 +1,67 @@
 .history{
+
     margin-top:20px;
-    background:#2b2b2b;
+
     padding:15px;
-    border-radius:12px;
-    color:white;
+
+    border-radius:18px;
+
+    background:rgba(255,255,255,.35);
+
+    backdrop-filter:blur(12px);
+
+    color:#8b1e52;
+
+    max-height:180px;
+
+    overflow-y:auto;
+
 }
 
 .history-header{
+
     display:flex;
+
     justify-content:space-between;
+
     align-items:center;
-    margin-bottom:10px;
+
+    margin-bottom:12px;
+
 }
 
 .history-header h3{
+
     margin:0;
+
 }
 
 .history-header button{
-    background:#ff4d4d;
+
+    background:#ff4d88;
+
     color:white;
+
     border:none;
-    padding:6px 12px;
-    border-radius:8px;
+
+    padding:7px 14px;
+
+    border-radius:10px;
+
     cursor:pointer;
+
+}
+
+.history-header button:hover{
+
+    background:#ff1a75;
+
 }
 
 .history p{
-    margin:8px 0;
-}
-.calculator{
-    width:420px;
-}
-.theme-toggle{
-    display:flex;
-    justify-content:flex-end;
-    margin-bottom:15px;
-}
 
-.theme-toggle button{
-    padding:8px 15px;
-    border:none;
-    border-radius:10px;
-    cursor:pointer;
-    width:auto;
-    font-size:14px;
+    margin:8px 0;
+
+    color:#993366;
+
 }

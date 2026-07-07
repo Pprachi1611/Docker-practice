@@ -5,13 +5,11 @@ function History({ history, clearHistory }) {
     <div className="history">
 
       <div className="history-header">
-
         <h3>History</h3>
 
         <button onClick={clearHistory}>
           Clear
         </button>
-
       </div>
 
       {history.length === 0 ? (

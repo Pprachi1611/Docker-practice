@@ -195,7 +195,10 @@ function Calculator() {
 
       <ButtonGrid onButtonClick={handleButton} />
 
-      <History history={history} />
+      <History
+        history={history}
+        clearHistory={() => setHistory([])}
+     />
     </div>
   );
 }
