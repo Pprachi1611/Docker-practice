@@ -53,7 +53,6 @@ function Calculator() {
       setDisplay("0");
       setFirstValue(null);
       setOperator(null);
-      setHistory([]);
       return;
     }
 
@@ -180,8 +179,6 @@ function Calculator() {
 
   return (
     <div className="calculator">
-   
-
       <Display
        value={display}
        operator={operator}
