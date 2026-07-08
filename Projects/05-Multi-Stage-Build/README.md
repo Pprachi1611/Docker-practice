@@ -19,7 +19,7 @@ This project demonstrates how to:
 
 ## 📸 Project Preview
 
-> *(Add a screenshot of your calculator here)*
+
 
 ```
 📷 Screenshot:
