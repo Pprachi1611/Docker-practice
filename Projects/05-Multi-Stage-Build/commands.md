@@ -1,311 +1,59 @@
-# Project 05 - Multi-Stage Docker Build (React + Vite)
+# Project 05 - Commands Reference
 
-## Objective
+## 1. Create React Project (Vite)
 
-Learn how to containerize a React application using Docker and understand the benefits of a multi-stage build.
+```bash
+npm create vite@latest
+```
 
----
+Select:
 
-# Technologies Used
-
-- React
-- Vite
-- Docker
-- Nginx
-- Node.js
-
----
-
-# Why Vite?
-
-Vite is a modern frontend build tool that provides:
-
-- Fast development server
-- Instant Hot Module Replacement (HMR)
-- Optimized production builds
-- Simpler project setup compared to Create React App
+```
+Framework : React
+Variant   : JavaScript
+Linter    : ESLint
+Package Manager : npm
+```
 
 ---
 
-# Why Docker?
+## 2. Install Dependencies
 
-Docker packages an application along with its dependencies into a container.
-
-Benefits:
-
-- Runs the same on every machine
-- Easy deployment
-- No dependency conflicts
-- Isolated environment
-- Portable
-
----
-
-# What is a Multi-Stage Build?
-
-A multi-stage build uses multiple `FROM` statements in a single Dockerfile.
-
-Each stage has its own purpose.
-
-Example:
-
-Stage 1 → Build the application
-
-Stage 2 → Run the application
-
----
-
-# Why Use a Multi-Stage Build?
-
-Without multi-stage:
-
-- Source code remains in the final image
-- Node modules remain
-- Image becomes very large
-
-With multi-stage:
-
-- Only production files are copied
-- Smaller image
-- Faster deployment
-- Better security
-
----
-
-# Project Workflow
-
-React Source Code
-        │
-        ▼
+```bash
 npm install
-        │
-        ▼
-npm run build
-        │
-        ▼
-dist/
-        │
-        ▼
-Copied into Nginx
-        │
-        ▼
-Browser
-
----
-
-# Dockerfile
-
-```dockerfile
-# Stage 1: Build React Application
-
-FROM node:24-alpine AS build
-
-WORKDIR /home/app
-
-COPY package*.json ./
-
-RUN npm install
-
-COPY . .
-
-RUN npm run build
-
-
-# Stage 2: Serve React App using Nginx
-
-FROM nginx:alpine
-
-COPY --from=build /home/app/dist /usr/share/nginx/html
-
-EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
 ```
 
 ---
 
-# Dockerfile Explanation
+## 3. Start Development Server
 
-## Stage 1
-
-### FROM node:24-alpine AS build
-
-- Uses Node.js Alpine image.
-- Alpine is lightweight.
-- `AS build` names this stage.
-
----
-
-### WORKDIR /home/app
-
-Creates the working directory inside the container.
-
-Equivalent to:
-
-```
-cd /home/app
-```
-
----
-
-### COPY package*.json ./
-
-Copies:
-
-- package.json
-- package-lock.json
-
-Only these files are copied first to improve Docker layer caching.
-
----
-
-### RUN npm install
-
-Installs all project dependencies.
-
----
-
-### COPY . .
-
-Copies the remaining project files into the container.
-
----
-
-### RUN npm run build
-
-Creates an optimized production build.
-
-Output folder:
-
-```
-dist/
-```
-
----
-
-# Stage 2
-
-### FROM nginx:alpine
-
-Starts with a lightweight Nginx image.
-
-Node.js is no longer required because React is now static files.
-
----
-
-### COPY --from=build
-
-Copies the build output from Stage 1.
-
-```
-/home/app/dist
-```
-
-to
-
-```
-/usr/share/nginx/html
-```
-
-This is Nginx's default web root.
-
----
-
-### EXPOSE 80
-
-Documents that the container listens on port 80.
-
----
-
-### CMD
-
-Starts the Nginx server.
-
-```
-nginx -g "daemon off;"
-```
-
-`daemon off;`
-
-Keeps Nginx running in the foreground so the container doesn't stop.
-
----
-
-# Why Nginx?
-
-React production builds are just:
-
-- HTML
-- CSS
-- JavaScript
-
-These are static files.
-
-Nginx is designed specifically to serve static websites.
-
-Advantages:
-
-- Very fast
-- Lightweight
-- Secure
-- Industry standard
-- Low memory usage
-
----
-
-# Can We Run React Without Nginx?
-
-Yes.
-
-Possible methods:
-
-## 1. npm run dev
-
-Uses Vite Development Server.
-
-Suitable only for development.
-
----
-
-## 2. npm run preview
-
-Uses Vite Preview Server.
-
-Good for testing production builds.
-
-Not recommended for production deployment.
-
----
-
-## 3. Express Server
-
-Serve the `dist` folder using Express.
-
-Requires Node.js.
-
----
-
-## 4. Nginx (Recommended)
-
-Most common production solution.
-
----
-
-# Development vs Production
-
-Development
-
-```
+```bash
 npm run dev
 ```
 
-- Fast refresh
-- Source code available
-- Debugging enabled
-
-Production
+Open:
 
 ```
+http://localhost:5173
+```
+
+---
+
+## 4. Install Additional Packages
+
+Example:
+
+```bash
+npm install express
+```
+
+(Only if required)
+
+---
+
+## 5. Build Production Version
+
+```bash
 npm run build
 ```
 
@@ -315,36 +63,51 @@ Creates:
 dist/
 ```
 
-Optimized for deployment.
+---
+
+## 6. Preview Production Build
+
+```bash
+npm run preview
+```
+
+Default URL:
+
+```
+http://localhost:4173
+```
 
 ---
 
-# Build Docker Image
+# Docker Commands
+
+## 7. Build Docker Image
 
 ```bash
 docker build -t react-calculator .
 ```
 
-Explanation:
+Example:
 
-- docker build → Build image
-- -t → Tag image
-- react-calculator → Image name
-- . → Current directory
+```bash
+docker build -t react-calculator:v1 .
+```
 
 ---
 
-# Run Container
+## 8. List Docker Images
 
 ```bash
-docker run -d -p 8080:80 --name calculator react-calculator
+docker images
 ```
 
-Explanation:
+---
 
-- -d → Detached mode
-- -p 8080:80 → Host port : Container port
-- --name → Container name
+## 9. Run Docker Container
+
+```bash
+docker run -d -p 8080:80 --name react-calculator-container react-calculator
+```
 
 Open:
 
@@ -354,139 +117,299 @@ http://localhost:8080
 
 ---
 
-# Useful Docker Commands
-
-Build image
-
-```bash
-docker build -t react-calculator .
-```
-
-List images
-
-```bash
-docker images
-```
-
-Run container
-
-```bash
-docker run -d -p 8080:80 react-calculator
-```
-
-List containers
+## 10. List Running Containers
 
 ```bash
 docker ps
 ```
 
-Stop container
+---
+
+## 11. List All Containers
+
+```bash
+docker ps -a
+```
+
+---
+
+## 12. Stop Container
+
+```bash
+docker stop react-calculator-container
+```
+
+or
 
 ```bash
 docker stop <container-id>
 ```
 
-Remove container
+---
+
+## 13. Start Existing Container
 
 ```bash
-docker rm <container-id>
+docker start react-calculator-container
 ```
 
-Remove image
+---
+
+## 14. Restart Container
+
+```bash
+docker restart react-calculator-container
+```
+
+---
+
+## 15. Remove Container
+
+```bash
+docker rm react-calculator-container
+```
+
+---
+
+## 16. Force Remove Running Container
+
+```bash
+docker rm -f react-calculator-container
+```
+
+---
+
+## 17. Remove Docker Image
 
 ```bash
 docker rmi react-calculator
 ```
 
-View logs
+---
+
+## 18. Remove All Stopped Containers
 
 ```bash
-docker logs <container-id>
+docker container prune
 ```
 
-Open shell inside container
+---
+
+## 19. Remove Unused Images
 
 ```bash
-docker exec -it <container-id> sh
+docker image prune
 ```
 
 ---
 
-# Advantages of Multi-Stage Builds
+## 20. Remove Everything Unused
 
-- Smaller Docker image
-- Faster downloads
-- Better security
-- Cleaner Dockerfile
-- No development dependencies in production
-- Faster deployment
-
----
-
-# Folder Structure
-
+```bash
+docker system prune
 ```
-05-Multi-Stage-Build/
 
-│── public/
-│── src/
-│── Dockerfile
-│── .dockerignore
-│── package.json
-│── vite.config.js
-│── README.md
-│── notes.md
+To remove everything including unused images:
+
+```bash
+docker system prune -a
 ```
 
 ---
 
-# Key Concepts Learned
+## 21. View Container Logs
 
-- React application structure
-- Vite project setup
-- Docker basics
-- Dockerfile instructions
-- Multi-stage builds
-- Production build (`npm run build`)
-- Static file serving
-- Nginx
-- Docker image creation
-- Docker container execution
+```bash
+docker logs react-calculator-container
+```
 
 ---
 
-# Interview Questions
+## 22. Follow Live Logs
 
-### Why use a multi-stage build?
-
-To reduce the final image size by copying only the production build into the runtime image.
-
----
-
-### Why use Nginx?
-
-Because React production builds are static files, and Nginx is optimized for serving static content efficiently.
+```bash
+docker logs -f react-calculator-container
+```
 
 ---
 
-### Why copy `package*.json` before the source code?
+## 23. Open Shell Inside Container
 
-To leverage Docker layer caching. If only source code changes and dependencies remain the same, Docker reuses the cached `npm install` layer, making builds faster.
+For Alpine-based images:
 
----
+```bash
+docker exec -it react-calculator-container sh
+```
 
-### What is the purpose of `npm run build`?
+For Ubuntu/Debian images:
 
-It generates an optimized production-ready version of the React application inside the `dist` folder.
-
----
-
-### What is the purpose of `.dockerignore`?
-
-It prevents unnecessary files (like `node_modules`, `.git`, logs, etc.) from being sent to the Docker build context, reducing build time and image size.
+```bash
+docker exec -it react-calculator-container bash
+```
 
 ---
 
-# Conclusion
+## 24. Inspect Container
 
-In this project, we built a React application using Vite, created an optimized production build, and containerized it using Docker with a multi-stage build. We used Node.js only for building the application and Nginx to serve the final static files, resulting in a smaller, faster, and production-ready Docker image.
+```bash
+docker inspect react-calculator-container
+```
+
+---
+
+## 25. Inspect Docker Image
+
+```bash
+docker inspect react-calculator
+```
+
+---
+
+## 26. View Running Processes
+
+```bash
+docker top react-calculator-container
+```
+
+---
+
+## 27. Show Resource Usage
+
+```bash
+docker stats
+```
+
+---
+
+## 28. Remove All Containers
+
+```bash
+docker rm -f $(docker ps -aq)
+```
+
+---
+
+## 29. Remove All Images
+
+```bash
+docker rmi -f $(docker images -aq)
+```
+
+---
+
+## 30. Check Docker Version
+
+```bash
+docker --version
+```
+
+---
+
+## 31. Check Docker Information
+
+```bash
+docker info
+```
+
+---
+
+# Git Commands (Optional)
+
+Initialize Git
+
+```bash
+git init
+```
+
+Check Status
+
+```bash
+git status
+```
+
+Stage Files
+
+```bash
+git add .
+```
+
+Commit
+
+```bash
+git commit -m "Project 05 - React Calculator with Multi-Stage Docker Build"
+```
+
+Push
+
+```bash
+git push
+```
+
+---
+
+# Useful npm Commands
+
+Check Node Version
+
+```bash
+node -v
+```
+
+Check npm Version
+
+```bash
+npm -v
+```
+
+Install All Dependencies
+
+```bash
+npm install
+```
+
+Install One Package
+
+```bash
+npm install <package-name>
+```
+
+Remove Package
+
+```bash
+npm uninstall <package-name>
+```
+
+List Installed Packages
+
+```bash
+npm list
+```
+
+---
+
+# Project Workflow
+
+```text
+Create React App
+        │
+        ▼
+npm install
+        │
+        ▼
+npm run dev
+        │
+        ▼
+Develop Application
+        │
+        ▼
+npm run build
+        │
+        ▼
+docker build
+        │
+        ▼
+docker run
+        │
+        ▼
+Open Browser
+```
