@@ -12,7 +12,7 @@ This project demonstrates one of the most important Docker concepts used in real
 
 ---
 
-# 📌 Project Objective
+# 📌 Project Objectives 
 
 The purpose of this project is to understand:
 
