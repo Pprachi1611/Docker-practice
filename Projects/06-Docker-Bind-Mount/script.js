@@ -4,11 +4,7 @@ const taskList = document.getElementById('taskList');
 const taskCounter = document.getElementById('taskCounter');
 const clearCompletedBtn = document.getElementById('clearCompletedBtn');
 
-let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-
-function saveTasks() {
-  localStorage.setItem('tasks', JSON.stringify(tasks));
-}
+let tasks = [];
 
 function render() {
   taskList.innerHTML = '';
@@ -50,7 +46,6 @@ function addTask() {
   if (text === '') return;
 
   tasks.push({ id: Date.now(), text, completed: false });
-  saveTasks();
   taskInput.value = '';
   render();
 }
@@ -59,19 +54,16 @@ function toggleComplete(id) {
   tasks = tasks.map(task =>
     task.id === id ? { ...task, completed: !task.completed } : task
   );
-  saveTasks();
   render();
 }
 
 function deleteTask(id) {
   tasks = tasks.filter(task => task.id !== id);
-  saveTasks();
   render();
 }
 
 function clearCompleted() {
   tasks = tasks.filter(task => !task.completed);
-  saveTasks();
   render();
 }
 
